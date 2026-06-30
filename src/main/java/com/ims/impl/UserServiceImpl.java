@@ -24,7 +24,37 @@ import com.ims.service.UserService;
 	    @Autowired
 	    private JwtService jwtService;
 	    
-	   
+	    @Override
+	    public LoginResponse login(LoginRequest request) {
+
+	        System.out.println("================================");
+	        System.out.println("LOGIN REQUEST RECEIVED");
+	        System.out.println("Email Received = [" + request.getEmail() + "]");
+	        System.out.println("Password Received = [" + request.getPassword() + "]");
+	        System.out.println("================================");
+
+	        boolean exists = userRepository.existsByEmail(request.getEmail());
+
+	        System.out.println("Email Exists In Database = " + exists);
+
+	        User user = userRepository.findByEmail(request.getEmail())
+	                .orElseThrow(() -> new RuntimeException("Invalid Email"));
+
+	        if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
+	            throw new RuntimeException("Invalid Password");
+	        }
+
+	        String token = jwtService.generateToken(user.getEmail());
+
+	        System.out.println("Login Successful for : " + user.getEmail());
+
+	        return new LoginResponse(
+	                token,
+	                user.getFullName(),
+	                user.getRole().name()
+	        );
+	    }
+	
 	    @Override
 	    public String register(RegisterRequest request) {
 	
@@ -48,22 +78,22 @@ import com.ims.service.UserService;
 	
 		
 		
-	    @Override
-	    public LoginResponse login(LoginRequest request) {
-
-	        User user = userRepository.findByEmail(request.getEmail())
-	                .orElseThrow(() -> new RuntimeException("Invalid Email"));
-
-	        if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
-	            throw new RuntimeException("Invalid Password");
-	        }
-
-	        String token = jwtService.generateToken(user.getEmail());
-
-	        return new LoginResponse(
-	                token,
-	                user.getFullName(),
-	                user.getRole().name()
-	        );
+//	    @Override
+//	    public LoginResponse login(LoginRequest request) {
+//
+//	        User user = userRepository.findByEmail(request.getEmail())
+//	                .orElseThrow(() -> new RuntimeException("Invalid Email"));
+//
+//	        if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
+//	            throw new RuntimeException("Invalid Password");
+//	        }
+//
+//	        String token = jwtService.generateToken(user.getEmail());
+//
+//	        return new LoginResponse(
+//	                token,
+//	                user.getFullName(),
+//	                user.getRole().name()
+//	        );
 	    }
-	}
+	
