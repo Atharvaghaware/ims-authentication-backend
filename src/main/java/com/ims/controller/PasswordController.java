@@ -9,7 +9,10 @@ import com.ims.service.PasswordService;
 
 @RestController
 @RequestMapping("/api/auth")
-@CrossOrigin(origins = "http://localhost:5173")
+@CrossOrigin(origins = {
+	    "http://localhost:5173",
+	    "https://ims-authentication-frontend.vercel.app"
+	})
 public class PasswordController {
 
     @Autowired

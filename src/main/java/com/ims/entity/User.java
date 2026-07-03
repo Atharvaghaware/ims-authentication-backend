@@ -99,4 +99,12 @@ public class User {
     public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
     }
+    
+    public List<PasswordResetToken> getResetTokens() {
+        return resetTokens;
+    }
+
+    public void setResetTokens(List<PasswordResetToken> resetTokens) {
+        this.resetTokens = resetTokens;
+    }
 }
