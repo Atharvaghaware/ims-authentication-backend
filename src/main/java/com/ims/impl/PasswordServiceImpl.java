@@ -63,14 +63,17 @@ public class PasswordServiceImpl implements PasswordService {
                         + resetLink
                         + "\n\nThis link will expire in 15 minutes.";
 
-        emailService.sendEmail(
-                user.getEmail(),
-                subject,
-                body
-        );
-
-        return "Password reset link has been sent to your email.";
-
+        try {
+            emailService.sendEmail(
+                    user.getEmail(),
+                    subject,
+                    body
+            );
+            return "Password reset link has been sent to your email.";
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "Failed to send email: " + e.getMessage();
+        }
     }
 
     @Override
