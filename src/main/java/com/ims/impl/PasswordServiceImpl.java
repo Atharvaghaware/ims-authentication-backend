@@ -5,7 +5,6 @@ import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -31,8 +30,6 @@ public class PasswordServiceImpl implements PasswordService {
     @Autowired
     private PasswordEncoder passwordEncoder;
     
-    @Value("${app.frontend.url}")
-    private String frontendUrl;
 
     @Override
     public String forgotPassword(String email) {
