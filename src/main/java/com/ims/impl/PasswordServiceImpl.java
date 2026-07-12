@@ -45,35 +45,13 @@ public class PasswordServiceImpl implements PasswordService {
         String token = UUID.randomUUID().toString();
 
         PasswordResetToken resetToken = new PasswordResetToken();
-
         resetToken.setToken(token);
         resetToken.setUser(user);
         resetToken.setExpiryDate(LocalDateTime.now().plusMinutes(15));
 
         tokenRepository.save(resetToken);
 
-        String resetLink =
-                "https://ims-authentication-frontend.vercel.app/reset-password?token=" + token;
-
-        String subject = "Reset Your Password";
-
-        String body =
-                "Hello " + user.getFullName() + ",\n\n"
-                        + "Click the link below to reset your password:\n\n"
-                        + resetLink
-                        + "\n\nThis link will expire in 15 minutes.";
-
-        try {
-            emailService.sendEmail(
-                    user.getEmail(),
-                    subject,
-                    body
-            );
-            return "Password reset link has been sent to your email.";
-        } catch (Exception e) {
-            e.printStackTrace();
-            return "Failed to send email: " + e.getMessage();
-        }
+        return "TOKEN CREATED : " + token;
     }
 
     @Override
