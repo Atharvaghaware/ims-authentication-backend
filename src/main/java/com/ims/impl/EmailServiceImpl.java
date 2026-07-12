@@ -15,18 +15,35 @@ public class EmailServiceImpl implements EmailService {
     private JavaMailSender mailSender;
 
     @Value("${spring.mail.username}")
-    private String fromEmail;
+    private String from;
 
     @Override
-    public void sendEmail(String to, String subject, String body) {
+    public void sendEmail(String to,
+                          String subject,
+                          String body) {
 
-        SimpleMailMessage message = new SimpleMailMessage();
+        try {
 
-        message.setFrom(fromEmail);
-        message.setTo(to);
-        message.setSubject(subject);
-        message.setText(body);
+            System.out.println("SMTP USER = " + from);
 
-        mailSender.send(message);
+            SimpleMailMessage message = new SimpleMailMessage();
+
+            message.setFrom(from);
+            message.setTo(to);
+            message.setSubject(subject);
+            message.setText(body);
+
+            mailSender.send(message);
+
+            System.out.println("EMAIL SENT SUCCESSFULLY");
+
+        } catch (Exception e) {
+
+            e.printStackTrace();
+
+            throw new RuntimeException(e);
+
+        }
+
     }
 }
