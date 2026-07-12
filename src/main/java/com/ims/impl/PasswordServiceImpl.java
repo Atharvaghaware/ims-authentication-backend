@@ -5,6 +5,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -29,7 +30,9 @@ public class PasswordServiceImpl implements PasswordService {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
-    
+
+    @Value("${app.frontend.url}")
+    private String frontendUrl;
 
     @Override
     public String forgotPassword(String email) {
@@ -51,7 +54,23 @@ public class PasswordServiceImpl implements PasswordService {
 
         tokenRepository.save(resetToken);
 
-        return "TOKEN CREATED : " + token;
+        String resetLink = frontendUrl + "/reset-password?token=" + token;
+
+        String subject = "Reset Your Password";
+
+        String body =
+                "Hello " + user.getFullName() + ",\n\n"
+                + "Click the link below to reset your password:\n\n"
+                + resetLink
+                + "\n\nThis link will expire in 15 minutes.";
+
+        emailService.sendEmail(
+                user.getEmail(),
+                subject,
+                body
+        );
+
+        return "Password reset link has been sent to your email.";
     }
 
     @Override
@@ -71,7 +90,6 @@ public class PasswordServiceImpl implements PasswordService {
             tokenRepository.delete(resetToken);
 
             return "Reset token has expired";
-
         }
 
         User user = resetToken.getUser();
@@ -83,7 +101,5 @@ public class PasswordServiceImpl implements PasswordService {
         tokenRepository.delete(resetToken);
 
         return "Password updated successfully";
-
     }
-
 }
