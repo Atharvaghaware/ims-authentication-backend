@@ -18,8 +18,8 @@ import com.ims.service.EmailService;
 @Service
 public class EmailServiceImpl implements EmailService {
 
-	@Value("${brevo.api.key}")
-	private String apiKey;
+    @Value("${brevo.api.key}")
+    private String apiKey;
 
     private final RestTemplate restTemplate = new RestTemplate();
 
@@ -30,47 +30,58 @@ public class EmailServiceImpl implements EmailService {
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.set("accept", "application/json");
         headers.set("api-key", apiKey);
-        headers.setAccept(List.of(MediaType.APPLICATION_JSON));
 
-        Map<String, Object> request = Map.of(
+        Map<String, Object> requestBody = Map.of(
                 "sender", Map.of(
                         "name", "IMS Authentication",
-                        "email", "atharvaghaware0007@gmail.com"   // Verified sender in Brevo
+                        "email", "atharvaghaware0007@gmail.com"
                 ),
                 "to", List.of(
-                        Map.of("email", to)
+                        Map.of(
+                                "email", to
+                        )
                 ),
                 "subject", subject,
                 "textContent", body
         );
 
-        HttpEntity<Map<String, Object>> entity =
-                new HttpEntity<>(request, headers);
+        HttpEntity<Map<String, Object>> request =
+                new HttpEntity<>(requestBody, headers);
 
         try {
+
+            System.out.println("========== BREVO ==========");
+            System.out.println("API Key Loaded : " + (apiKey != null));
+            System.out.println("API Key Prefix : " + apiKey.substring(0, 8));
+            System.out.println("Sending To     : " + to);
 
             ResponseEntity<String> response = restTemplate.exchange(
                     url,
                     HttpMethod.POST,
-                    entity,
+                    request,
                     String.class
             );
 
-            System.out.println("Brevo Response: " + response.getStatusCode());
-            System.out.println("Brevo Body: " + response.getBody());
+            System.out.println("Status : " + response.getStatusCode());
+            System.out.println("Body   : " + response.getBody());
+            System.out.println("===========================");
 
-        } catch (HttpStatusCodeException e) {
+        } catch (HttpStatusCodeException ex) {
 
-            System.out.println("Brevo Error Status: " + e.getStatusCode());
-            System.out.println("Brevo Error Body: " + e.getResponseBodyAsString());
+            System.out.println("========== BREVO ERROR ==========");
+            System.out.println("Status  : " + ex.getStatusCode());
+            System.out.println("Headers : " + ex.getResponseHeaders());
+            System.out.println("Body    : " + ex.getResponseBodyAsString());
+            System.out.println("=================================");
 
-            throw new RuntimeException("Brevo API Error: " + e.getResponseBodyAsString());
+            throw new RuntimeException("Brevo API Error", ex);
 
-        } catch (Exception e) {
+        } catch (Exception ex) {
 
-            e.printStackTrace();
-            throw new RuntimeException("Unable to send email: " + e.getMessage());
+            ex.printStackTrace();
+            throw new RuntimeException("Unable to send email", ex);
 
         }
     }
