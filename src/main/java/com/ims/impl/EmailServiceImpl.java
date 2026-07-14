@@ -52,10 +52,11 @@ public class EmailServiceImpl implements EmailService {
 
         try {
 
-            System.out.println("========== BREVO ==========");
-            System.out.println("API Key Loaded : " + (apiKey != null));
-            System.out.println("API Key Prefix : " + apiKey.substring(0, 8));
-            System.out.println("Sending To     : " + to);
+        	System.out.println("========== BREVO ==========");
+        	System.out.println("API Key Loaded : " + (apiKey != null));
+        	System.out.println("API Key Length : " + apiKey.length());
+        	System.out.println("API Key Prefix : " + apiKey.substring(0, 8));
+        	System.out.println("API Key Suffix : " + apiKey.substring(apiKey.length() - 6));
 
             ResponseEntity<String> response = restTemplate.exchange(
                     url,
