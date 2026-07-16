@@ -75,25 +75,7 @@ import com.ims.service.UserService;
 	
 	        return "User Registered Successfully";
 	    }
+	};
 	
 		
-		
-//	    @Override
-//	    public LoginResponse login(LoginRequest request) {
-//
-//	        User user = userRepository.findByEmail(request.getEmail())
-//	                .orElseThrow(() -> new RuntimeException("Invalid Email"));
-//
-//	        if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
-//	            throw new RuntimeException("Invalid Password");
-//	        }
-//
-//	        String token = jwtService.generateToken(user.getEmail());
-//
-//	        return new LoginResponse(
-//	                token,
-//	                user.getFullName(),
-//	                user.getRole().name()
-//	        );
-	    }
 	
